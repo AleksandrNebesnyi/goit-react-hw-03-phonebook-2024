@@ -13,7 +13,25 @@ export class App extends Component {
     filter: '',
   };
 
-  addContact = (name, number) => {
+  CONTACT_STORAGE_KEY = 'contacts';
+
+  componentDidMount() {
+    const contacts = JSON.parse(localStorage.getItem(this.CONTACT_STORAGE_KEY));
+    if (contacts) {
+      this.setState({ contacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem(
+        this.CONTACT_STORAGE_KEY,
+        JSON.stringify(this.state.contacts)
+      );
+    }
+  }
+
+  addContact = ({ name, number }) => {
     const normalizeName = name.toLowerCase();
     if (normalizeName.trim() === '') {
       return;
@@ -26,7 +44,7 @@ export class App extends Component {
       Notiflix.Notify.failure(`${name} is alredy in contact`);
       return;
     }
-    console.log(ifNameAlreadyExist);
+
     const newContact = {
       id: nanoid(),
       name,
@@ -56,11 +74,6 @@ export class App extends Component {
     this.setState({ [e.currentTarget.name]: e.currentTarget.value });
   };
 
-  handleSubmit = ({ name, number }) => {
-    this.addContact(name, number);
-    console.log(this.state.contacts);
-  };
-
   render() {
     const { filter } = this.state;
     const visibleContacts = this.getVisibleContacts();
@@ -68,7 +81,7 @@ export class App extends Component {
       <div className={css.container}>
         <h1>Phonebook</h1>
 
-        <ContactForm submit={this.handleSubmit} />
+        <ContactForm submit={this.addContact} />
 
         <h2>Contacts</h2>
 

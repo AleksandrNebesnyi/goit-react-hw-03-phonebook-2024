@@ -34,6 +34,7 @@ export class ContactForm extends Component {
             onChange={this.handleChange}
             type="text"
             name="name"
+            value={this.state.name}
             required
             placeholder="Enter Name"
             autoComplete="on"
@@ -47,6 +48,7 @@ export class ContactForm extends Component {
             onChange={this.handleChange}
             type="tel"
             name="number"
+            value={this.state.number}
             required
             placeholder="Enter Phone"
             autoComplete="on"
